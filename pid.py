@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from random import random
 
 TIME_STEP = 0.000001
 ONE_SEC = int(1/TIME_STEP)
@@ -13,7 +14,7 @@ K_D = float(input())
 
 max_omega = 0
 integral = 0
-errors = []
+errors = [0]
 pv_data = []
 set_point_data = []
 pv = PV_INITIAL
@@ -23,6 +24,10 @@ for i in range(ONE_SEC):
     pv_data.append(pv)
     set_point_data.append(set_point)
     integral += (errors[-1]*TIME_STEP)
+    omega = K_P*errors[-1] + K_I*integral + K_D*(errors[-1] - errors[-2])/TIME_STEP
+    max_omega = max(omega, max_omega)
+    if(i%(ONE_SEC/10) == 0): pv += 2*random()-1
+    pv += omega*TIME_STEP
 
 # print("Enter new Set Point: ", end="")
 # set_point = int(input())
@@ -37,6 +42,7 @@ for i in range(seconds*ONE_SEC):
     integral += (errors[-1]*TIME_STEP)
     omega = K_P*errors[-1] + K_I*integral + K_D*(errors[-1] - errors[-2])/TIME_STEP
     max_omega = max(omega, max_omega)
+    if(i%(ONE_SEC/10) == 0): pv += 2*random()-1
     pv += omega*TIME_STEP
 
 print("Max Omega", max_omega)
